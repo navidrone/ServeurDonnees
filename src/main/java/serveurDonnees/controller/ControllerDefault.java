@@ -1,17 +1,23 @@
 package serveurDonnees.controller;
 
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.RMIClientSocketFactory;
-import java.rmi.server.RMIServerSocketFactory;
+import java.rmi.server.UnicastRemoteObject;
 
 import serveurDonnees.service.FabriqueMissionImp;
 
 
 
 public class ControllerDefault {
+	
 	
 	/**
 	 * @param args
@@ -20,12 +26,26 @@ public class ControllerDefault {
 
 		 try 
 	        { 
-	            FabriqueMissionImp fabrique = new FabriqueMissionImp(); 
-	            
-	            Registry registry = getRegistry(1099);
-	            registry.rebind("FabriqueMission", fabrique); 
-	            
-	            System.out.println("bind complete port : 1099");
+			 			 
+			   	Registry registry = getRegistry("localhost",1099);
+
+	            FabriqueMissionImp fabrique = new FabriqueMissionImp(); 	   		   
+				Naming.rebind("rmi://localhost:1099/FabriqueMission", fabrique);
+
+		        DataInputStream in = new DataInputStream(System.in); 
+		        System.out.print("Taper rc, pour arreter le serveur..."); 
+		        System.out.flush(); 
+		        String valeur= in.readLine(); 
+
+		        // Désenregistrement de l'OD de l'annuaire 
+		        Naming.unbind("rmi://localhost:1099/FabriqueMission"); 
+
+		        // Destruction de l'OD 
+		        UnicastRemoteObject.unexportObject(fabrique,true); 
+		        
+//	            registry.rebind("FabriqueMission", fabrique); 
+//	            
+//	            System.out.println("bind complete port : 1099");
 	            
 	        } 
 	        catch (Exception e) 
@@ -36,7 +56,7 @@ public class ControllerDefault {
 
 	}
 	
-	public static Registry getRegistry(int port) throws RemoteException {
+	public static Registry getRegistry(String ip,int port) throws RemoteException {
 		  if (port <= 0)   port=Registry.REGISTRY_PORT;
 		  Registry reg=LocateRegistry.getRegistry(port);
 		  if (exists(reg))   System.out.println("Located an RMI registry at :"+ port);
@@ -49,18 +69,20 @@ public class ControllerDefault {
 	
 	private static boolean exists(Registry reg){
 		  try {
+			
 		    reg.lookup("FabriqueMission");
 		  }
 		 catch (  NotBoundException e) {
 			System.out.println("'FabriqueMission' not bound");
-			e.printStackTrace();
+			//e.printStackTrace();
 		  }
 		catch (  RemoteException e) {
 			System.out.println("failed to communicate with registry - assuming it's not running");
-			e.printStackTrace();
+			//e.printStackTrace();
 		    reg=null;
 		  }
 		  return (reg != null);
 		}
+	
 	
 }

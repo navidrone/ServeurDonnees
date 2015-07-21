@@ -1,3 +1,17 @@
-grant {
+
+grant codeBase "file:D:\git\ServeurDonnees\target\-"   {
      	permission java.security.AllPermission;
   };
+    
+grant codeBase "file:D:\git\ServeurDonnees\src\-"   {
+     	permission java.security.AllPermission;
+  };
+      
+grant codeBase "file:D:\git\ServeurDonnees\target\classes\serveurDonnees\controller\ControllerDefault.class"   {
+     	permission java.security.AllPermission;
+  };
+    
+grant codeBase "file:D:\git\ServeurDonnees\target\classes\-"   {
+     	permission java.security.AllPermission;
+  };
+  

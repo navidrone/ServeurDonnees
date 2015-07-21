@@ -5,6 +5,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import rmi.FabriqueMissionInt;
+import rmi.MissionInt;
 import serveurDonnees.modele.bean.Mission;
 import serveurDonnees.modele.dao.CoordGpsDAO;
 import serveurDonnees.modele.dao.MissionDAO;
@@ -17,14 +19,19 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	
 	private static final long serialVersionUID = 1L;
 
-	public FabriqueMissionImp() throws RemoteException{}
+	public FabriqueMissionImp() throws RemoteException{
+		
+		super();
+		System.out.println("Fabrique Mission Créée.");
+		
+	}
 
-	public Mission getMission(int id) throws RemoteException {
+	public MissionInt getMission(int id) throws RemoteException {
 		// TODO Auto-generated method stub
 		return missionDao.get(id);
 	}
 
-	public void saveMission(Mission mission) throws RemoteException {
+	public void saveMission(MissionInt mission) throws RemoteException {
 		// TODO Auto-generated method stub
 		
 	}

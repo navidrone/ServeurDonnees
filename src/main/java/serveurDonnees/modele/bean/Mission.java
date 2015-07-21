@@ -13,9 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
+import rmi.MissionInt;
+
 @Entity
 @Table(name = "MISSION")
-public class Mission extends UnicastRemoteObject implements Serializable{
+public class Mission extends UnicastRemoteObject implements Serializable,MissionInt{
 
 
 	/**
