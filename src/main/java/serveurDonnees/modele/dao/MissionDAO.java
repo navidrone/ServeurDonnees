@@ -5,8 +5,10 @@ import java.util.List;
  
 
 
+
 import serveurDonnees.modele.bean.Mission;
  
+
 
 
 import org.hibernate.Criteria;
@@ -17,17 +19,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
  
 @Repository
-public class MissionDAO {
-    @Autowired
-    private SessionFactory sessionFactory;
+public class MissionDAO extends NavidroneDAO {
  
     public MissionDAO() {
          
     }
      
-    public MissionDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Transactional
     public List<Mission> list() {
@@ -41,7 +38,7 @@ public class MissionDAO {
 
     @Transactional
     public void saveOrUpdate(Mission mission) {
-        sessionFactory.getCurrentSession().saveOrUpdate(mission);
+    	sessionFactory.getCurrentSession().saveOrUpdate(mission);
     }
  
 

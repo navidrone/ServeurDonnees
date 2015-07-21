@@ -88,25 +88,5 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter{
 				sessionFactory);
 		return transactionManager;
 	}
-	
-	
-	@Autowired
-	@Bean(name = "utilisateurDao")
-	public UtilisateurDAO getUtilisateurDao(SessionFactory sessionFactory) {
-		return new UtilisateurDAO(sessionFactory);
-	}
-	
-	
-	@Autowired
-	@Bean(name = "coordGpsDao")
-	public CoordGpsDAO getCoordonneeGpsDAO(SessionFactory sessionFactory) {
-		return new CoordGpsDAO(sessionFactory);
-	}
-	
-	@Autowired
-	@Bean(name = "missionDao")
-	public MissionDAO getMissionDAO(SessionFactory sessionFactory) {
-		return new MissionDAO(sessionFactory);
-	}
 
 }

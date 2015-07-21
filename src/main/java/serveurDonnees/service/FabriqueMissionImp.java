@@ -1,5 +1,6 @@
 package serveurDonnees.service;
 
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -10,6 +11,7 @@ import rmi.MissionInt;
 import serveurDonnees.modele.bean.Mission;
 import serveurDonnees.modele.dao.CoordGpsDAO;
 import serveurDonnees.modele.dao.MissionDAO;
+import serveurDonnees.modele.dao.NavidroneDAO;
 import serveurDonnees.modele.dao.UtilisateurDAO;
 
 public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueMissionInt {
@@ -19,12 +21,24 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	
 	private static final long serialVersionUID = 1L;
 
-	public FabriqueMissionImp() throws RemoteException{
-		
-		super();
-		System.out.println("Fabrique Mission Créée.");
-		
-	}
+	
+    public FabriqueMissionImp(String nomRegister, int portRegister) throws Exception 
+        { 
+       			super(); 
+       			missionDao = new MissionDAO();
+       			try{
+       				Naming.unbind("rmi://localhost:"+portRegister+ "/"+ nomRegister);
+       			}catch (Exception e){
+       				
+       			}
+                Naming.bind("rmi://localhost:"+portRegister+ "/"+ nomRegister,this); 
+
+        		System.out.println("Fabrique Mission Créée.");
+        		System.out.println("Récupération de la mission de test");
+        		Mission m = missionDao.get(0);
+        		System.out.println("Mission Ok ? "+m.getId());
+        } 
+
 
 	public MissionInt getMission(int id) throws RemoteException {
 		// TODO Auto-generated method stub

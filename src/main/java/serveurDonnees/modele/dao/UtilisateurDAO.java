@@ -14,17 +14,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
  
 @Repository
-public class UtilisateurDAO {
-    @Autowired
-    private SessionFactory sessionFactory;
- 
+public class UtilisateurDAO extends NavidroneDAO {
+	
     public UtilisateurDAO() {
-         
+         super();
     }
      
-    public UtilisateurDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Transactional
     public List<Utilisateur> list() {
@@ -38,7 +33,7 @@ public class UtilisateurDAO {
 
     @Transactional
     public void saveOrUpdate(Utilisateur user) {
-        sessionFactory.getCurrentSession().saveOrUpdate(user);
+    	sessionFactory.getCurrentSession().saveOrUpdate(user);
     }
  
 

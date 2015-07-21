@@ -1,12 +1,8 @@
 package serveurDonnees.controller;
 
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -29,8 +25,7 @@ public class ControllerDefault {
 			 			 
 			   	Registry registry = getRegistry("localhost",1099);
 
-	            FabriqueMissionImp fabrique = new FabriqueMissionImp(); 	   		   
-				Naming.rebind("rmi://localhost:1099/FabriqueMission", fabrique);
+	            FabriqueMissionImp fabrique = new FabriqueMissionImp("FabriqueMission",1099); 
 
 		        DataInputStream in = new DataInputStream(System.in); 
 		        System.out.print("Taper rc, pour arreter le serveur..."); 
