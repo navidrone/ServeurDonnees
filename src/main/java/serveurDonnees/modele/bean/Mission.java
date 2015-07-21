@@ -37,7 +37,7 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
     @Column(name = "MISSION_NAME")
 	private Integer name;
     
-    @CollectionTable(name="WAYPOINT",
+    @CollectionTable(name="RELEVE",
             		 joinColumns=@JoinColumn(name="MISSION_ID")
     		  )
     private ArrayList<CoordGps> waypoints;
