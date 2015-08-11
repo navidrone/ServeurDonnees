@@ -35,12 +35,12 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
 	private Integer id;
 	
     @Column(name = "MISSION_NAME")
-	private Integer name;
+	private String name;
     
-    @CollectionTable(name="RELEVE",
-            		 joinColumns=@JoinColumn(name="MISSION_ID")
-    		  )
-    private ArrayList<CoordGps> waypoints;
+//    @CollectionTable(name="RELEVE",
+//            		 joinColumns=@JoinColumn(name="MISSION_ID")
+//    		  )
+//    private ArrayList<CoordGps> waypoints;
 
 	public Integer getId() {
 		return id;
@@ -50,21 +50,21 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
 		this.id = id;
 	}
 
-	public Integer getName() {
+	public String getName() {
 		return name;
 	}
 
-	public void setName(Integer name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
-	public ArrayList<CoordGps> getWaypoints() {
-		return waypoints;
-	}
-
-	public void setWaypoints(ArrayList<CoordGps> waypoints) {
-		this.waypoints = waypoints;
-	}
+//	public ArrayList<CoordGps> getWaypoints() {
+//		return waypoints;
+//	}
+//
+//	public void setWaypoints(ArrayList<CoordGps> waypoints) {
+//		this.waypoints = waypoints;
+//	}
 
 	
 }

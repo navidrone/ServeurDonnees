@@ -31,12 +31,7 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
        			}catch (Exception e){
        				
        			}
-                Naming.bind("rmi://localhost:"+portRegister+ "/"+ nomRegister,this); 
-
-        		System.out.println("Fabrique Mission Créée.");
-        		System.out.println("Récupération de la mission de test");
-        		Mission m = missionDao.get(0);
-        		System.out.println("Mission Ok ? "+m.getId());
+                Naming.bind("rmi://localhost:"+portRegister+ "/"+ nomRegister,this);        		
         } 
 
 

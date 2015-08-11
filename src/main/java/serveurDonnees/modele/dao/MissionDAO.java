@@ -6,13 +6,16 @@ import java.util.List;
 
 
 
+
 import serveurDonnees.modele.bean.Mission;
  
 
 
 
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -29,7 +32,7 @@ public class MissionDAO extends NavidroneDAO {
     @Transactional
     public List<Mission> list() {
         @SuppressWarnings("unchecked")
-        List<Mission> listMission = (List<Mission>) sessionFactory.getCurrentSession()
+        List<Mission> listMission = (List<Mission>)  getSession()
                 .createCriteria(Mission.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
  
@@ -38,7 +41,7 @@ public class MissionDAO extends NavidroneDAO {
 
     @Transactional
     public void saveOrUpdate(Mission mission) {
-    	sessionFactory.getCurrentSession().saveOrUpdate(mission);
+    	 getSession().saveOrUpdate(mission);
     }
  
 
@@ -51,14 +54,15 @@ public class MissionDAO extends NavidroneDAO {
 			e.printStackTrace();
 		}
         missionToDelete.setId(id);
-        sessionFactory.getCurrentSession().delete(missionToDelete);
+        getSession().delete(missionToDelete);
     }
 
 
     @Transactional
     public Mission get(int id) {
         String hql = "from Mission where id=" + id;
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+               
+        Query query = getSession().createQuery(hql);
          
         @SuppressWarnings("unchecked")
         List<Mission> missions = (List<Mission>) query.list();

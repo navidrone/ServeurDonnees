@@ -3,51 +3,63 @@
  */
 package serveurDonnees.modele.dao;
 
-import javax.sql.DataSource;
-
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate4.LocalSessionFactoryBuilder;
-
-import serveurDonnees.modele.bean.CoordGps;
-import serveurDonnees.modele.bean.Mission;
-import serveurDonnees.modele.bean.Utilisateur;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author Jullien
  *
  */
+@EnableTransactionManagement
 public class NavidroneDAO {
 	
-	public NavidroneDAO() {
+    protected static SessionFactory sessionFactory;
+    private static Session session ;
+    
+    
+	static {
 		
 		if(sessionFactory == null ){
-
-			LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(getDataSource());
-		 
-			sessionBuilder.addAnnotatedClasses(Utilisateur.class);
-			sessionBuilder.addAnnotatedClasses(CoordGps.class);
-			sessionBuilder.addAnnotatedClasses(Mission.class);
 			
-			sessionFactory = sessionBuilder.buildSessionFactory();
-		}
+	        Configuration configuration = new Configuration();
+	        configuration.configure("hibernate.cfg.xml");
 		
+	        ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
+			sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
+		}
 	}
 
-    protected static SessionFactory sessionFactory;
-    
-	private DataSource getDataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/navidrone");
-		dataSource.setUsername("root");
-		dataSource.setPassword("root");
-	 
-		return dataSource;
-	}
+	/** La gestion d'un DataSource en java ne semble pas marcher, en XML ça passe*/
 	
-	
+//	private static DataSource getDataSource() {
+//		BasicDataSource dataSource = new BasicDataSource();
+//		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+//		dataSource.setUrl("jdbc:mysql://localhost:3306/navidrone");
+//		dataSource.setUsername("root");
+//		dataSource.setPassword("root");
+//	 
+//		return dataSource;
+//	}	
 
-	
+	public static SessionFactory getSessionFactory() {
+
+		return sessionFactory;
+
+	}
+
+	protected Session getSession(){
+		
+		 if(session == null || !session.isOpen())
+	        {
+	        	 session = sessionFactory.openSession();
+	        }
+		
+		return session;
+	}
 	
 }
