@@ -10,10 +10,12 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
+import rmi.CoordGpsInt;
+
 @Entity
 @Table(name = "COORD_GPS")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS) // pour l'héritage...
-public class CoordGps implements Serializable{
+public class CoordGps implements Serializable, CoordGpsInt{
 
 	/**
 	 * 

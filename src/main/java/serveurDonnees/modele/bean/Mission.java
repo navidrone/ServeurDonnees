@@ -4,16 +4,18 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import rmi.DroneInt;
 import rmi.MissionInt;
+import rmi.ReleveInt;
 
 @Entity
 @Table(name = "MISSION")
@@ -37,10 +39,11 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
     @Column(name = "MISSION_NAME")
 	private String name;
     
-//    @CollectionTable(name="RELEVE",
-//            		 joinColumns=@JoinColumn(name="MISSION_ID")
-//    		  )
-//    private ArrayList<CoordGps> waypoints;
+    /** Attributs renseignés "à la main" dans la factory */
+    @Transient
+    private ArrayList<Releve> releve;
+    @Transient
+    private ArrayList<Drone> flotte;
 
 	public Integer getId() {
 		return id;
@@ -58,13 +61,26 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
 		this.name = name;
 	}
 
-//	public ArrayList<CoordGps> getWaypoints() {
-//		return waypoints;
-//	}
-//
-//	public void setWaypoints(ArrayList<CoordGps> waypoints) {
-//		this.waypoints = waypoints;
-//	}
+	
+
+	public List<? extends ReleveInt> getReleve() {
+		return releve;
+	}
+
+	public void setReleve(List<? extends ReleveInt> releve) {
+		this.releve = (ArrayList<Releve>)releve;
+	}
+
+	public List<? extends DroneInt> getFlotte() {
+		return flotte;
+	}
+
+	public void setFlotte(List<? extends DroneInt> flotte) {
+		this.flotte = (ArrayList<Drone>)flotte;
+	}
+
+
+	
 
 	
 }

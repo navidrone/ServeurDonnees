@@ -14,22 +14,18 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
  
 @Repository
-public class CoordGpsDAO {
-    @Autowired
-    private SessionFactory sessionFactory;
- 
+public class CoordGpsDAO extends NavidroneDAO {
+	
+	
     public CoordGpsDAO() {
          
     }
-     
-    public CoordGpsDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+
 
     @Transactional
     public List<CoordGps> list() {
         @SuppressWarnings("unchecked")
-        List<CoordGps> listCoordGps = (List<CoordGps>) sessionFactory.getCurrentSession()
+        List<CoordGps> listCoordGps = (List<CoordGps>) getSession()
                 .createCriteria(CoordGps.class)
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
  
@@ -38,7 +34,7 @@ public class CoordGpsDAO {
 
     @Transactional
     public void saveOrUpdate(CoordGps coordGps) {
-        sessionFactory.getCurrentSession().saveOrUpdate(coordGps);
+        getSession().saveOrUpdate(coordGps);
     }
  
 
@@ -46,14 +42,14 @@ public class CoordGpsDAO {
     public void delete(int id) {
     	CoordGps coordGpsToDelete = new CoordGps();
     	coordGpsToDelete.setId(id);
-        sessionFactory.getCurrentSession().delete(coordGpsToDelete);
+        getSession().delete(coordGpsToDelete);
     }
 
 
     @Transactional
     public CoordGps get(int id) {
         String hql = "from CoordGps where id=" + id;
-        Query query = sessionFactory.getCurrentSession().createQuery(hql);
+        Query query = getSession().createQuery(hql);
          
         @SuppressWarnings("unchecked")
         List<CoordGps> coordGps = (List<CoordGps>) query.list();

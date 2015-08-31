@@ -18,6 +18,8 @@
 <mapping class="serveurDonnees.modele.bean.CoordGps" />
 <mapping class="serveurDonnees.modele.bean.Mission" />
 <mapping class="serveurDonnees.modele.bean.Utilisateur" />
+<mapping class="serveurDonnees.modele.bean.Releve" />
+<mapping class="serveurDonnees.modele.bean.Drone" />
 
 </session-factory>
 </hibernate-configuration>

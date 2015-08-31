@@ -23,13 +23,14 @@ public class ControllerDefault {
 		 try 
 	        { 
 			 			 
-			   	Registry registry = getRegistry("localhost",1099);
-
 	            FabriqueMissionImp fabrique = new FabriqueMissionImp("FabriqueMission",1099); 
 
 		        DataInputStream in = new DataInputStream(System.in); 
-		        System.out.print("Taper rc, pour arreter le serveur..."); 
-		        System.out.flush(); 
+		        System.out.println("************************************************"); 
+		        System.out.println("************************************************"); 
+		        System.out.println("SERVEUR DE DONNEES DEMARRE !!!!!!!!!! "); 
+		        System.out.println("************************************************"); 
+		        System.out.println("************************************************"); 
 		        String valeur= in.readLine(); 
 
 		        // Désenregistrement de l'OD de l'annuaire 
@@ -38,9 +39,6 @@ public class ControllerDefault {
 		        // Destruction de l'OD 
 		        UnicastRemoteObject.unexportObject(fabrique,true); 
 		        
-//	            registry.rebind("FabriqueMission", fabrique); 
-//	            
-//	            System.out.println("bind complete port : 1099");
 	            
 	        } 
 	        catch (Exception e) 

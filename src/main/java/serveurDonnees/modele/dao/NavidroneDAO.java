@@ -11,11 +11,17 @@ import org.hibernate.service.ServiceRegistryBuilder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
+ * 
+ * Classe de connexion à la base
+ * Utilise les informations dans le fichier hibernate.cfg.xml
+ * 
  * @author Jullien
  *
  */
 @EnableTransactionManagement
 public class NavidroneDAO {
+	
+	private boolean verbeux = true;
 	
     protected static SessionFactory sessionFactory;
     private static Session session ;
@@ -46,12 +52,6 @@ public class NavidroneDAO {
 //		return dataSource;
 //	}	
 
-	public static SessionFactory getSessionFactory() {
-
-		return sessionFactory;
-
-	}
-
 	protected Session getSession(){
 		
 		 if(session == null || !session.isOpen())
@@ -60,6 +60,15 @@ public class NavidroneDAO {
 	        }
 		
 		return session;
+	}
+	
+	
+	protected void trace(String trace){
+		
+		if(verbeux){
+			System.out.println(trace);
+		}
+		
 	}
 	
 }
