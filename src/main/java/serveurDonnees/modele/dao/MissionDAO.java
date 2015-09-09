@@ -7,9 +7,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import rmi.DroneInt;
+import rmi.MissionInt;
+import rmi.ReleveInt;
+import serveurDonnees.modele.bean.CoordGps;
 import serveurDonnees.modele.bean.Drone;
 import serveurDonnees.modele.bean.Mission;
 import serveurDonnees.modele.bean.Releve;
@@ -23,7 +28,7 @@ public class MissionDAO extends NavidroneDAO {
      
 
     @Transactional
-    public List<Mission> list() {
+    public List<Mission> list() throws RemoteException {
         @SuppressWarnings("unchecked")
         List<Mission> listMission = (List<Mission>)  getSession()
                 .createCriteria(Mission.class)
@@ -39,14 +44,11 @@ public class MissionDAO extends NavidroneDAO {
     @Transactional
     public void saveOrUpdate(Mission mission){
     	
-    	trace("Mise à jour de la mission : "+mission.getName());
+    	trace("Mise à jour de la mission : "+mission.getName());	
     	
-    	if(mission.getId() == null){
-    		mission.setId(getNewMissionId());
-    	}
-    	trace("ID de la mission : "+mission.getId());
-    	
-    	 getSession().saveOrUpdate(mission);
+    	getSession().saveOrUpdate(mission);
+    	 
+     	trace("Je suis sorti...");
     	 
     	 ReleveDAO releveDAO = new ReleveDAO();
     	 DroneDAO droneDAO = new DroneDAO();
@@ -60,6 +62,54 @@ public class MissionDAO extends NavidroneDAO {
     	 }
     	 
     	 majFlotte(mission);
+    }
+    
+    @Transactional
+    public void saveOrUpdateFromRMI(MissionInt missionInt) throws RemoteException{
+    	
+    	trace("Mise à jour de la mission : "+missionInt.getName());	
+
+        	Mission missionToSave = new Mission(missionInt.getId(), 
+        										missionInt.getName(), 
+        										missionInt.getType(), 
+        										new CoordGps(missionInt.getCoord_dep().getId(),
+        													missionInt.getCoord_dep().getLattitude(), 
+        													missionInt.getCoord_dep().getLongitude()), 
+        										new CoordGps(missionInt.getCoord_ar().getId(),
+        													missionInt.getCoord_ar().getLattitude(), 
+        													missionInt.getCoord_ar().getLongitude()), 
+        										missionInt.getPeriode(), 
+        										missionInt.getDensite(), 
+        										missionInt.getPortee());
+        	
+        	getSession().saveOrUpdate(missionToSave);
+        	 
+        	
+     	trace("Je suis sorti...");
+    	 
+    	 ReleveDAO releveDAO = new ReleveDAO();
+    	 DroneDAO droneDAO = new DroneDAO();
+    	 
+    	 if(missionInt.getReleve() != null){
+    		 
+        	 for(ReleveInt releveInt:missionInt.getReleve()){
+        		 Releve r = new Releve();
+    			 BeanUtils.copyProperties(releveInt, r);
+        		 releveDAO.saveOrUpdate(r);
+        	 }
+    		 
+    	 }
+    	 
+    	 if(missionInt.getFlotte() != null){
+
+        	 for(DroneInt droneInt:missionInt.getFlotte()){
+    			Drone d = new Drone();
+    			BeanUtils.copyProperties(droneInt, d);
+        		 droneDAO.saveOrUpdate(d);
+        	 }
+        	 
+        	 majFlotteFromRMI(missionInt);
+    	 }
     }
  
 
@@ -77,7 +127,7 @@ public class MissionDAO extends NavidroneDAO {
 
 
     @Transactional
-    public Mission get(int id) {    	
+    public Mission get(int id) throws RemoteException {    	
 
     	trace("Récupération de la mission : "+id);
     	
@@ -99,11 +149,11 @@ public class MissionDAO extends NavidroneDAO {
     }
     
     @Transactional
-    private Mission addReleve(Mission m)
+    private Mission addReleve(Mission m) throws RemoteException
     {
     	ReleveDAO releveDAO = new ReleveDAO();
     	
-    	m.setReleve((ArrayList<Releve>)releveDAO.getByMission(m.getId()));
+    	m.setReleve((List<? extends ReleveInt>)releveDAO.getByMission(m.getId()));
     	
     	return m;
     }
@@ -128,6 +178,22 @@ public class MissionDAO extends NavidroneDAO {
     	
     	/*Insertion de la table Flotte*/   	 
 	   	 for(Drone d:(ArrayList<Drone>)m.getFlotte()){
+	   		 sql = "Insert into Flotte (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
+	         query.executeUpdate();
+	   	 }     
+    	
+    }
+    
+    @Transactional
+    private void majFlotteFromRMI(MissionInt m) throws RemoteException{    		
+    	
+    	/*Purge de la table Flotte*/
+    	String sql = "Delete from Flotte where MISSION_ID=" + m.getId() ;
+        Query query = getSession().createSQLQuery(sql);
+        query.executeUpdate();
+    	
+    	/*Insertion de la table Flotte*/   	 
+	   	 for(DroneInt d:m.getFlotte()){
 	   		 sql = "Insert into Flotte (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
 	         query.executeUpdate();
 	   	 }     

@@ -2,8 +2,20 @@ package rmi;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 public interface FabriqueMissionInt extends Remote {
+	
+	
+	/**
+	 * 
+	 * Remonte la liste intégrale des missions stockées en base
+	 * 
+	 * @return
+	 * @throws RemoteException
+	 */
+	List<? extends MissionInt> getListMission() throws RemoteException;
+	
 	
 	/**
 	 * 

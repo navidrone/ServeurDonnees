@@ -4,6 +4,8 @@
 package serveurDonnees.modele.bean;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Date;
 
 import javax.persistence.CollectionTable;
@@ -24,7 +26,12 @@ import rmi.ReleveInt;
 
 @Entity
 @Table(name = "RELEVE")
-public class Releve implements Serializable, ReleveInt {
+public class Releve extends UnicastRemoteObject  implements Serializable, ReleveInt {
+
+	public Releve() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	private static final long serialVersionUID = 1L;	
 

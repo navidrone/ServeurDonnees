@@ -1,10 +1,13 @@
 package serveurDonnees.modele.dao;
  
+import java.rmi.RemoteException;
 import java.util.List;
  
 
+
 import serveurDonnees.modele.bean.CoordGps;
  
+
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -39,7 +42,7 @@ public class CoordGpsDAO extends NavidroneDAO {
  
 
     @Transactional
-    public void delete(int id) {
+    public void delete(int id) throws RemoteException {
     	CoordGps coordGpsToDelete = new CoordGps();
     	coordGpsToDelete.setId(id);
         getSession().delete(coordGpsToDelete);

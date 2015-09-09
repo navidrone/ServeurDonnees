@@ -1,6 +1,8 @@
 package serveurDonnees.modele.bean;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,11 +17,25 @@ import rmi.CoordGpsInt;
 @Entity
 @Table(name = "COORD_GPS")
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS) // pour l'héritage...
-public class CoordGps implements Serializable, CoordGpsInt{
+public class CoordGps extends UnicastRemoteObject  implements Serializable, CoordGpsInt{
 
-	/**
-	 * 
-	 */
+	public CoordGps() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public CoordGps(Integer id, Double lattitude, Double longitude)
+			throws RemoteException {
+		super();
+		this.id = id;
+		this.lattitude = lattitude;
+		this.longitude = longitude;
+	}
+
+
+
+
+
 	private static final long serialVersionUID = 1L;
 
 	@Id

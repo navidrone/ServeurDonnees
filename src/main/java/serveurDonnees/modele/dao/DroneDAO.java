@@ -3,6 +3,7 @@
  */
 package serveurDonnees.modele.dao;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -39,7 +40,7 @@ public class DroneDAO extends NavidroneDAO {
  
 
     @Transactional
-    public void delete(int id) {
+    public void delete(int id) throws RemoteException {
         Drone droneToDelete = new Drone();
         droneToDelete.setId(id);
         getSession().delete(droneToDelete);

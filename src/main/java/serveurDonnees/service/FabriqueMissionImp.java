@@ -5,8 +5,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.List;
 
-import org.codehaus.jackson.map.util.BeanUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,10 +35,12 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 
        			try{
            			LocateRegistry.createRegistry(portRegister);
+           			//System.setProperty("java.security.policy","file:D:/git/serveurDonnees/security.policy");
+   						
        			}catch (Exception e){
        				e.printStackTrace();       				
        			}
-       			
+       			       			
        			try{
        				Naming.unbind("rmi://localhost:"+portRegister+ "/"+ nomRegister);
        			}catch (Exception e){
@@ -47,22 +49,19 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
        			
        			
                 Naming.bind("rmi://localhost:"+portRegister+ "/"+ nomRegister,this); 
+                
         } 
 
 
 	public MissionInt getMission(int id) throws RemoteException {
-		// TODO Auto-generated method stub
 		return missionDao.get(id);
 	}
 
 	public void saveMission(MissionInt mission) throws RemoteException {
-		// TODO Auto-generated method stub
-				
-		missionDao.saveOrUpdate(recycleMission(mission));
+		missionDao.saveOrUpdateFromRMI(mission);
 	}
 
 	public void deleteMission(int id) throws RemoteException {
-		// TODO Auto-generated method stub
 		missionDao.delete(id);
 	}
 
@@ -77,8 +76,8 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 		Mission m = new Mission();
 		BeanUtils.copyProperties(missionInt, m);
 		
-		ArrayList<Releve> releveList = new ArrayList<Releve>();
-		ArrayList<Drone>  droneList  = new ArrayList<Drone>();
+		ArrayList<ReleveInt> releveList = new ArrayList<ReleveInt>();
+		ArrayList<DroneInt>  droneList  = new ArrayList<DroneInt>();
 		
 		if(missionInt.getReleve() != null){
 			
@@ -104,6 +103,12 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 		m.setFlotte(droneList);
 		
 		return m;
+	}
+
+
+	@Override
+	public List<? extends MissionInt> getListMission() throws RemoteException {
+		return missionDao.list();
 	}
 
 }
