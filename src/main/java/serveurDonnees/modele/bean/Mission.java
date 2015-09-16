@@ -6,10 +6,13 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -61,12 +64,12 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
     @Column(name = "MISSION_TYPE")
 	private String type;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "COORD_GPS_DEP")
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "COORD_GPS_DEP")
 	private CoordGps coord_dep;
 
-    @OneToOne
-    @PrimaryKeyJoinColumn(name = "COORD_GPS_AR")
+    @OneToOne(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "COORD_GPS_AR")
 	private CoordGps coord_ar;
     
     @Column(name = "PERIODE")

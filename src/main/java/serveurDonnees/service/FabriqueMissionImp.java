@@ -14,6 +14,7 @@ import rmi.DroneInt;
 import rmi.FabriqueMissionInt;
 import rmi.MissionInt;
 import rmi.ReleveInt;
+import rmi.ServiceCalculeMissionInt;
 import serveurDonnees.modele.bean.Drone;
 import serveurDonnees.modele.bean.Mission;
 import serveurDonnees.modele.bean.Releve;
@@ -26,6 +27,34 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	
 	private static final long serialVersionUID = 1L;
 
+
+	private ServiceCalculeMissionInt serviceCalculeMissionInt;
+	
+	/**
+	 * 
+	 * Accès exclusif à la FabriqueMission RMI
+	 * 
+	 * @return
+	 */
+	private ServiceCalculeMissionInt getServiceCalculeMission() {
+		
+		if(serviceCalculeMissionInt == null){
+			
+			 try {
+				 serviceCalculeMissionInt =  (ServiceCalculeMissionInt) Naming.lookup("rmi://localhost:1099/CalculMission");
+		            
+		        } catch (Exception e) {
+		            System.err.println("Client exception: " + e.toString());
+		            e.printStackTrace();
+		        }
+			
+		}
+		
+		return serviceCalculeMissionInt;
+	}
+	
+	
+	
 	
     public FabriqueMissionImp(String nomRegister, int portRegister) throws Exception 
         { 
@@ -38,7 +67,7 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
            			//System.setProperty("java.security.policy","file:D:/git/serveurDonnees/security.policy");
    						
        			}catch (Exception e){
-       				e.printStackTrace();       				
+       				//e.printStackTrace();       				
        			}
        			       			
        			try{
@@ -58,7 +87,11 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	}
 
 	public void saveMission(MissionInt mission) throws RemoteException {
-		missionDao.saveOrUpdateFromRMI(mission);
+		try {
+			missionDao.saveOrUpdateFromRMI(mission);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void deleteMission(int id) throws RemoteException {
@@ -66,8 +99,9 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	}
 
 	@Override
-	public void calculeMission(MissionInt mission) throws RemoteException {
-		// TODO Auto-generated method stub
+	public void calculeMission(int id) throws RemoteException {
+
+		getServiceCalculeMission().calculeMission(id);
 		
 	}
 	

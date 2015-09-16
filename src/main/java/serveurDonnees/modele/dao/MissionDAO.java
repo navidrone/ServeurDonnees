@@ -69,20 +69,37 @@ public class MissionDAO extends NavidroneDAO {
     	
     	trace("Mise à jour de la mission : "+missionInt.getName());	
 
+    		CoordGps gpsDep = null;
+    		CoordGps gpsAr = null;
+    		
+    		if("bathymetrie".equals(missionInt.getType())){
+        		gpsAr = new CoordGps(missionInt.getCoord_ar().getId(),
+    							missionInt.getCoord_ar().getLattitude(), 
+    							missionInt.getCoord_ar().getLongitude());
+    			
+    		}
+    		 gpsDep =  new CoordGps(missionInt.getCoord_dep().getId(),
+							missionInt.getCoord_dep().getLattitude(), 
+							missionInt.getCoord_dep().getLongitude());
+    		
+    	
         	Mission missionToSave = new Mission(missionInt.getId(), 
         										missionInt.getName(), 
-        										missionInt.getType(), 
-        										new CoordGps(missionInt.getCoord_dep().getId(),
-        													missionInt.getCoord_dep().getLattitude(), 
-        													missionInt.getCoord_dep().getLongitude()), 
-        										new CoordGps(missionInt.getCoord_ar().getId(),
-        													missionInt.getCoord_ar().getLattitude(), 
-        													missionInt.getCoord_ar().getLongitude()), 
+        										missionInt.getType(),
+        										gpsDep , 
+        										gpsAr , 
         										missionInt.getPeriode(), 
         										missionInt.getDensite(), 
         										missionInt.getPortee());
         	
-        	getSession().saveOrUpdate(missionToSave);
+        	trace("Etat du coordonnées GPS de départ");
+        	trace("ID : "+missionToSave.getCoord_dep().getId());
+        	trace("LATTITUDE : "+missionToSave.getCoord_dep().getLattitude());
+        	trace("LONGITUDE : "+missionToSave.getCoord_dep().getLongitude());
+        	
+        	
+        	
+        	getSession().saveOrUpdate(merge(missionToSave));
         	 
         	
      	trace("Je suis sorti...");
@@ -146,6 +163,11 @@ public class MissionDAO extends NavidroneDAO {
         }
          
         return null;
+    }
+    
+    @Transactional
+    public Mission merge(Mission mission) throws RemoteException{
+    	return (Mission)getSession().merge(mission);
     }
     
     @Transactional

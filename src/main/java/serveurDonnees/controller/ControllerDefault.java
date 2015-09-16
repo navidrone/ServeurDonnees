@@ -8,6 +8,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import rmi.ServiceCalculeMissionInt;
+import serveurDonnees.modele.bean.Mission;
+import serveurDonnees.modele.dao.MissionDAO;
 import serveurDonnees.service.FabriqueMissionImp;
 
 
@@ -24,6 +27,20 @@ public class ControllerDefault {
 	        { 
 			 			 
 	            FabriqueMissionImp fabrique = new FabriqueMissionImp("FabriqueMission",1099); 
+	            
+	            try{
+	            	ServiceCalculeMissionInt serviceCalculeMissionInt = (ServiceCalculeMissionInt) Naming.lookup("rmi://localhost:1099/CalculMission");
+
+	            	MissionDAO md = new MissionDAO();
+	            	Mission m = md.get(2);
+	            	md.saveOrUpdate(m);
+	            	
+	            	
+	            	serviceCalculeMissionInt.calculeMission(2);
+	            	
+	            }catch(Exception e){
+	            	e.printStackTrace();
+	            }
 
 		        DataInputStream in = new DataInputStream(System.in); 
 		        System.out.println("************************************************"); 
