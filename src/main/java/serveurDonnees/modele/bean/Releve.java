@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import rmi.CoordGpsInt;
+import rmi.MissionInt;
 import rmi.ReleveInt;
 
 /**
@@ -29,6 +30,17 @@ public class Releve extends UnicastRemoteObject  implements Serializable, Releve
 	public Releve() throws RemoteException {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	
+	public Releve(ReleveInt releveInt, MissionInt missionInt) throws RemoteException {
+		super();
+		CoordGpsInt coordGpsInt = releveInt.getCoordGps();
+		this.setDateReleve(releveInt.getDateReleve());
+		this.setProfondeur(profondeur);
+		this.setCoordGps(new CoordGps(coordGpsInt.getId(),
+									coordGpsInt.getLattitude(),
+									coordGpsInt.getLongitude()));	
+		this.setRelevePk(new RelevePK(missionInt.getId(), coordGpsInt.getId()));
 	}
 
 	private static final long serialVersionUID = 1L;	

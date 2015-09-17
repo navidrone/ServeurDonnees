@@ -97,9 +97,12 @@ public class MissionDAO extends NavidroneDAO {
         	trace("LATTITUDE : "+missionToSave.getCoord_dep().getLattitude());
         	trace("LONGITUDE : "+missionToSave.getCoord_dep().getLongitude());
         	
+        	if(missionToSave.getId() != null){
+            	getSession().saveOrUpdate(merge(missionToSave));        		
+        	}else{
+            	getSession().saveOrUpdate(missionToSave);
+        	}
         	
-        	
-        	getSession().saveOrUpdate(merge(missionToSave));
         	 
         	
      	trace("Je suis sorti...");
@@ -108,24 +111,23 @@ public class MissionDAO extends NavidroneDAO {
     	 DroneDAO droneDAO = new DroneDAO();
     	 
     	 if(missionInt.getReleve() != null){
-    		 
         	 for(ReleveInt releveInt:missionInt.getReleve()){
-        		 Releve r = new Releve();
-    			 BeanUtils.copyProperties(releveInt, r);
+        		 Releve r = new Releve(releveInt,missionToSave);    			 
         		 releveDAO.saveOrUpdate(r);
         	 }
     		 
     	 }
     	 
     	 if(missionInt.getFlotte() != null){
-
+    		 missionToSave.setFlotte(new ArrayList<Drone>());
         	 for(DroneInt droneInt:missionInt.getFlotte()){
     			Drone d = new Drone();
     			BeanUtils.copyProperties(droneInt, d);
         		 droneDAO.saveOrUpdate(d);
+        		 ((ArrayList<Drone>)missionToSave.getFlotte()).add(d);
         	 }
         	 
-        	 majFlotteFromRMI(missionInt);
+        	 majFlotteFromRMI(missionToSave);
     	 }
     }
  

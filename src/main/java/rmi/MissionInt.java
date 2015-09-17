@@ -47,4 +47,9 @@ public interface MissionInt extends Remote{
 
 	public void setFlotte(List<? extends DroneInt> flotte) throws RemoteException;
 	
+	public void addDrone(String droneName) throws RemoteException;
+	
+	public void deleteDrone(String droneName) throws RemoteException;
+	
+	
 }

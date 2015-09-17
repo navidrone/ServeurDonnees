@@ -28,6 +28,15 @@ public class Drone extends UnicastRemoteObject  implements Serializable, DroneIn
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public Drone(String name) throws RemoteException {
+		super();
+		this.name = name;
+	}
+
+
 
 	private static final long serialVersionUID = 1L;
 

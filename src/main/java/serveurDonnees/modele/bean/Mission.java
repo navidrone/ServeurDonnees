@@ -167,5 +167,22 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
 		this.flotte = (ArrayList<DroneInt>)flotte;
 	}
 
+	@Override
+	public void addDrone(String droneName) throws RemoteException {
+		this.flotte.add(new Drone(droneName));
+		
+	}
+
+	@Override
+	public void deleteDrone(String droneName) throws RemoteException {
+		for(DroneInt d:this.flotte){
+			if(droneName != null && droneName.equals(d.getName())){
+				this.flotte.remove(d);
+				break;
+			}
+		}
+		
+	}
+
 	
 }

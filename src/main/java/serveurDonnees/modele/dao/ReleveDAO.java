@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import serveurDonnees.modele.bean.CoordGps;
 import serveurDonnees.modele.bean.Releve;
 
 public class ReleveDAO  extends NavidroneDAO {
@@ -28,9 +29,15 @@ public class ReleveDAO  extends NavidroneDAO {
 
     @Transactional
     public void saveOrUpdate(Releve releve) {
-        getSession().saveOrUpdate(releve);
         CoordGpsDAO coordGpsDAO = new CoordGpsDAO();
-        coordGpsDAO.saveOrUpdate(releve.getCoordGps());
+        CoordGps coordGps = releve.getCoordGps();
+        boolean newCoordGps = coordGps.getId() == null ;
+        coordGpsDAO.saveOrUpdate(coordGps);
+        if(newCoordGps){
+        	releve.getRelevePk().setCoordGpsID(coordGps.getId());
+        }
+        
+        getSession().saveOrUpdate(releve);
     }
  
 
