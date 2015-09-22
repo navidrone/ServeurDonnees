@@ -141,7 +141,8 @@ public class MissionDAO extends NavidroneDAO {
 			e.printStackTrace();
 		}
         missionToDelete.setId(id);
-        getSession().delete(missionToDelete);
+        getSession().delete(merge(missionToDelete));
+        getSession().flush();
     }
 
 
@@ -168,7 +169,7 @@ public class MissionDAO extends NavidroneDAO {
     }
     
     @Transactional
-    public Mission merge(Mission mission) throws RemoteException{
+    public Mission merge(Mission mission){
     	return (Mission)getSession().merge(mission);
     }
     
