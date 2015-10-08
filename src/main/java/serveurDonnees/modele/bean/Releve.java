@@ -89,6 +89,38 @@ public class Releve extends UnicastRemoteObject  implements Serializable, Releve
 	public void setCoordGps(CoordGpsInt coordGps) {
 		this.coordGps = (CoordGps)coordGps;
 	}
+
+	@Override
+	public Integer getId() throws RemoteException {
+		return coordGps.getId();
+	}
+
+	@Override
+	public void setId(Integer id) throws RemoteException {
+		coordGps.setId(id);	
+	}
+
+	@Override
+	public Double getLattitude() throws RemoteException {
+		return coordGps.getLattitude();
+	}
+
+	@Override
+	public void setLattitude(Double lattitude) throws RemoteException {
+		coordGps.setLattitude(lattitude);
+		
+	}
+
+	@Override
+	public Double getLongitude() throws RemoteException {
+		return coordGps.getLongitude();
+	}
+
+	@Override
+	public void setLongitude(Double longitude) throws RemoteException {
+		coordGps.setLongitude(longitude);
+		
+	}
 	
 	
 	
