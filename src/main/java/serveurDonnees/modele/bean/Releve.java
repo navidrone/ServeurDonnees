@@ -36,7 +36,7 @@ public class Releve extends UnicastRemoteObject  implements Serializable, Releve
 		super();
 		CoordGpsInt coordGpsInt = releveInt.getCoordGps();
 		this.setDateReleve(releveInt.getDateReleve());
-		this.setProfondeur(profondeur);
+		this.setProfondeur(releveInt.getProfondeur());
 		this.setCoordGps(new CoordGps(coordGpsInt.getId(),
 									coordGpsInt.getLattitude(),
 									coordGpsInt.getLongitude()));	

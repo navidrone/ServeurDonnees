@@ -34,7 +34,7 @@ public class ReleveDAO  extends NavidroneDAO {
         boolean newCoordGps = coordGps.getId() == null ;
         
         System.out.println("Nouveau coordonnée ? "+newCoordGps);
-        
+        System.out.println("Profondeur ? "+releve.getProfondeur());
         if(newCoordGps){
             coordGpsDAO.saveOrUpdate(coordGps);
         	releve.getRelevePk().setCoordGpsID(coordGps.getId());
