@@ -197,13 +197,13 @@ public class MissionDAO extends NavidroneDAO {
     private void majFlotte(Mission m){    		
     	
     	/*Purge de la table Flotte*/
-    	String sql = "Delete from Flotte where MISSION_ID=" + m.getId() ;
+    	String sql = "Delete from FLOTTE where MISSION_ID=" + m.getId() ;
         Query query = getSession().createSQLQuery(sql);
         query.executeUpdate();
     	
     	/*Insertion de la table Flotte*/   	 
 	   	 for(Drone d:(ArrayList<Drone>)m.getFlotte()){
-	   		 sql = "Insert into Flotte (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
+	   		 sql = "Insert into FLOTTE (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
 	         query.executeUpdate();
 	   	 }     
     	
@@ -213,13 +213,13 @@ public class MissionDAO extends NavidroneDAO {
     private void majFlotteFromRMI(MissionInt m) throws RemoteException{    		
     	
     	/*Purge de la table Flotte*/
-    	String sql = "Delete from Flotte where MISSION_ID=" + m.getId() ;
+    	String sql = "Delete from FLOTTE where MISSION_ID=" + m.getId() ;
         Query query = getSession().createSQLQuery(sql);
         query.executeUpdate();
     	
     	/*Insertion de la table Flotte*/   	 
 	   	 for(DroneInt d:m.getFlotte()){
-	   		 sql = "Insert into Flotte (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
+	   		 sql = "Insert into FLOTTE (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
 	         query.executeUpdate();
 	   	 }     
     	
@@ -228,7 +228,7 @@ public class MissionDAO extends NavidroneDAO {
     @Transactional
     private int getNewMissionId(){
 
-        String sql = "Select max(MISSION_ID)+1 from Mission";
+        String sql = "Select max(MISSION_ID)+1 from MISSION";
         Query query = getSession().createSQLQuery(sql);
 
         @SuppressWarnings("unchecked")

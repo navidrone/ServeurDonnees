@@ -64,7 +64,7 @@ public class DroneDAO extends NavidroneDAO {
     
     @Transactional
     public  List<Drone> getByMission(int missionId) {
-        String sql = "Select * from Drone where DRONE_ID in (select DRONE_ID from Flotte where MISSION_ID=" + missionId +")";
+        String sql = "Select * from DRONE where DRONE_ID in (select DRONE_ID from FLOTTE where MISSION_ID=" + missionId +")";
         Query query = getSession().createSQLQuery(sql).addEntity(Drone.class);
         
         @SuppressWarnings("unchecked")
