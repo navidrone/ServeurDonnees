@@ -32,12 +32,20 @@ public class ReleveDAO  extends NavidroneDAO {
         CoordGpsDAO coordGpsDAO = new CoordGpsDAO();
         CoordGps coordGps = releve.getCoordGps();
         boolean newCoordGps = coordGps.getId() == null ;
-        coordGpsDAO.saveOrUpdate(coordGps);
+        
+        System.out.println("Nouveau coordonnée ? "+newCoordGps);
+        
         if(newCoordGps){
+            coordGpsDAO.saveOrUpdate(coordGps);
         	releve.getRelevePk().setCoordGpsID(coordGps.getId());
+            System.out.println("Sauvegarde du relevé "+releve.getRelevePk().getMissionID()+ " / "+releve.getRelevePk().getCoordGpsID());
+            getSession().saveOrUpdate(releve);
+        }else{
+            coordGpsDAO.saveOrUpdate(merge(coordGps));
+            getSession().saveOrUpdate(merge(releve));
         }
         
-        getSession().saveOrUpdate(releve);
+        getSession().flush();
     }
  
 
@@ -83,5 +91,14 @@ public class ReleveDAO  extends NavidroneDAO {
         }
          
         return releve;
+    }
+    
+    @Transactional
+    public CoordGps merge(CoordGps coordGps){
+    	return (CoordGps)getSession().merge(coordGps);
+    }
+    @Transactional
+    public Releve merge(Releve releve){
+    	return (Releve)getSession().merge(releve);
     }
 }

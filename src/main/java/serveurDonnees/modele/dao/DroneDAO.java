@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import serveurDonnees.modele.bean.CoordGps;
 import serveurDonnees.modele.bean.Drone;
 
 /**
@@ -35,7 +36,11 @@ public class DroneDAO extends NavidroneDAO {
 
     @Transactional
     public void saveOrUpdate(Drone drone) {
-    	getSession().saveOrUpdate(drone);
+    	if(drone.getId() != null){
+        	getSession().saveOrUpdate(merge(drone));    		
+    	}else{
+        	getSession().saveOrUpdate(drone);    		
+        }
     }
  
 
@@ -69,9 +74,18 @@ public class DroneDAO extends NavidroneDAO {
         
         @SuppressWarnings("unchecked")
         List<Drone> drones = (List<Drone>) query.list();
-         
+       
+        if(drones != null && !drones.isEmpty()){
+        	System.out.println("Drones ok : "+drones.get(0).getName());
+        }else{
+        	System.out.println("LISTE DE DRONES VIDE !!!!!!!!!!!");
+        }
+        
         return drones;
     }
     
-    
+    @Transactional
+    public Drone merge(Drone done){
+    	return (Drone)getSession().merge(done);
+    }
 }

@@ -80,8 +80,16 @@ public class FabriqueMissionImp extends UnicastRemoteObject implements FabriqueM
 	}
 
 	public void saveMission(MissionInt mission) throws RemoteException {
+		
+		Integer id = mission.getId();
+		
 		try {
-			missionDao.saveOrUpdateFromRMI(mission);			
+			Integer missionACalcule = missionDao.saveOrUpdateFromRMI(mission);	
+			
+			if(missionACalcule != null && id == null){
+				calculeMission(missionACalcule);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,6 +1,7 @@
 package serveurDonnees.modele.dao;
  
 import java.math.BigInteger;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import rmi.DroneInt;
 import rmi.MissionInt;
 import rmi.ReleveInt;
+import rmi.ServiceCalculeMissionInt;
 import serveurDonnees.modele.bean.CoordGps;
 import serveurDonnees.modele.bean.Drone;
 import serveurDonnees.modele.bean.Mission;
@@ -65,14 +67,14 @@ public class MissionDAO extends NavidroneDAO {
     }
     
     @Transactional
-    public void saveOrUpdateFromRMI(MissionInt missionInt) throws RemoteException{
+    public Integer saveOrUpdateFromRMI(MissionInt missionInt) throws RemoteException{
     	
     	trace("Mise à jour de la mission : "+missionInt.getName());	
 
     		CoordGps gpsDep = null;
     		CoordGps gpsAr = null;
     		
-    		if("bathymetrie".equals(missionInt.getType())){
+    		if("bathymetrie".equalsIgnoreCase(missionInt.getType())){
         		gpsAr = new CoordGps(missionInt.getCoord_ar().getId(),
     							missionInt.getCoord_ar().getLattitude(), 
     							missionInt.getCoord_ar().getLongitude());
@@ -110,13 +112,21 @@ public class MissionDAO extends NavidroneDAO {
     	 ReleveDAO releveDAO = new ReleveDAO();
     	 DroneDAO droneDAO = new DroneDAO();
     	 
-    	 if(missionInt.getReleve() != null){
-        	 for(ReleveInt releveInt:missionInt.getReleve()){
-        		 Releve r = new Releve(releveInt,missionToSave);    			 
-        		 releveDAO.saveOrUpdate(r);
-        	 }
-    		 
-    	 }
+
+     	trace("Etat Flotte/Relevé : ");
+     	trace("Flotte : " + ((missionInt.getFlotte() == null || missionInt.getFlotte().isEmpty()) ? "VIDE..." : missionInt.getFlotte().size() ));
+     	trace("Relevés : " + ((missionInt.getReleve() == null || missionInt.getReleve().isEmpty()) ? "VIDE..." : missionInt.getReleve().size() ));
+
+   	 
+	   	 if(missionInt.getReleve() != null){
+	       	 for(ReleveInt releveInt:missionInt.getReleve()){
+	          	trace("BOUCLE");
+	       		 Releve r = new Releve(releveInt,missionToSave);    			 
+	       		 releveDAO.saveOrUpdate(r);
+	       	 }
+	   		 
+	   	 }    	
+   	 
     	 
     	 if(missionInt.getFlotte() != null){
     		 missionToSave.setFlotte(new ArrayList<Drone>());
@@ -128,6 +138,14 @@ public class MissionDAO extends NavidroneDAO {
         	 }
         	 
         	 majFlotteFromRMI(missionToSave);
+    	 }
+    	 
+    	 System.out.println("Sortie de sauvegarde : "+ missionToSave.getId() +  "  - "+missionToSave.isEffectuee());
+    	 
+    	 if( !missionToSave.isEffectuee() ){
+    		 return missionToSave.getId();
+    	 }else{
+    		 return null;
     	 }
     }
  
@@ -174,6 +192,16 @@ public class MissionDAO extends NavidroneDAO {
     }
     
     @Transactional
+    public CoordGps merge(CoordGps coordGps){
+    	return (CoordGps)getSession().merge(coordGps);
+    }
+    
+    @Transactional
+    public Releve merge(Releve releve){
+    	return (Releve)getSession().merge(releve);
+    }
+    
+    @Transactional
     private Mission addReleve(Mission m) throws RemoteException
     {
     	ReleveDAO releveDAO = new ReleveDAO();
@@ -204,6 +232,7 @@ public class MissionDAO extends NavidroneDAO {
     	/*Insertion de la table Flotte*/   	 
 	   	 for(Drone d:(ArrayList<Drone>)m.getFlotte()){
 	   		 sql = "Insert into FLOTTE (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
+	         query = getSession().createSQLQuery(sql);
 	         query.executeUpdate();
 	   	 }     
     	
@@ -220,6 +249,7 @@ public class MissionDAO extends NavidroneDAO {
     	/*Insertion de la table Flotte*/   	 
 	   	 for(DroneInt d:m.getFlotte()){
 	   		 sql = "Insert into FLOTTE (MISSION_ID,DRONE_ID) values(" + m.getId()+","+d.getId()+")" ;
+	         query = getSession().createSQLQuery(sql);
 	         query.executeUpdate();
 	   	 }     
     	

@@ -27,20 +27,7 @@ public class ControllerDefault {
 	        { 
 			 			 
 	            FabriqueMissionImp fabrique = new FabriqueMissionImp("FabriqueMission",1099); 
-	            
-	            try{
-	            	ServiceCalculeMissionInt serviceCalculeMissionInt = (ServiceCalculeMissionInt) Naming.lookup("rmi://localhost:1099/CalculMission");
-
-	            	MissionDAO md = new MissionDAO();
-	            	Mission m = md.get(2);
-	            	md.saveOrUpdate(m);
-	            	
-	            	
-	            	serviceCalculeMissionInt.calculeMission(2);
-	            	
-	            }catch(Exception e){
-	            	e.printStackTrace();
-	            }
+	           
 
 		        DataInputStream in = new DataInputStream(System.in); 
 		        System.out.println("************************************************"); 

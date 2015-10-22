@@ -183,6 +183,25 @@ public class Mission extends UnicastRemoteObject implements Serializable,Mission
 		}
 		
 	}
+	
+	/**
+	 * Renvoie si la mission a déjà été effectuée ou non
+	 * @return
+	 */
+	public Boolean isEffectuee(){
+		if(releve != null){
+			for(ReleveInt r : releve){
+				try {
+					if(r.getProfondeur() != null) return Boolean.TRUE;
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		
+		
+		return Boolean.FALSE;
+	}
 
 	
 }
